@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: on-failure
     ports:
       - "8089:8089"
     depends_on:
@@ -22,6 +23,8 @@ services:
 
   mysqldb:
     image: mysql:8.0
+    restart: unless-stopped
+
     container_name: mysqldb
     ports:
       - "3306:3306"
