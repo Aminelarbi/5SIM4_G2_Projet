@@ -56,7 +56,16 @@
 		</dependency>
 
 		<!-- Byte Buddy (Fixed version) -->
-
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.12.22</version>
+		</dependency>
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy-agent</artifactId>
+			<version>1.12.22</version>
+		</dependency>
 
 		<!-- Spring Boot Actuator (For metrics, health, etc.) -->
 		<dependency>
