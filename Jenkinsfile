@@ -5,7 +5,7 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('SonarToken')
         DOCKER_HUB_CREDENTIALS = credentials('DockerHubCredentials')
-        IMAGE_TAG = 'v3' // Nouveau tag pour l'image Docker
+        IMAGE_TAG = 'v3'
         DOCKER_IMAGE='anas_rebai_5sim4_g2_back_ski'
     }
 
@@ -58,23 +58,23 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-                    agent { label 'agent01' }
-                    steps {
-                        script {
-                            def nexusUrl = "http://192.168.50.5:8081"
-                            def groupId = "tn.esprit.spring"
-                            def artifactId = "gestion-station-ski"
-                            def version = "1.2"
+            agent { label 'agent01' }
+            steps {
+                script {
+                    def nexusUrl = "http://192.168.50.5:8081"
+                    def groupId = "tn.esprit.spring"
+                    def artifactId = "gestion-station-ski"
+                    def version = "1.2"
 
-                            sh """
-                                docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
-                                --build-arg NEXUS_URL=${nexusUrl} \
-                                --build-arg GROUP_ID=${groupId} \
-                                --build-arg ARTIFACT_ID=${artifactId} \
-                                --build-arg VERSION=${version} .
-                            """
-                        }
-                    }
+                    sh """
+                        docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
+                            --build-arg NEXUS_URL=${nexusUrl} \
+                            --build-arg GROUP_ID=${groupId} \
+                            --build-arg ARTIFACT_ID=${artifactId} \
+                            --build-arg VERSION=${version} .
+                    """
+                }
+            }
         }
 
         stage('Push Image to DockerHub') {
