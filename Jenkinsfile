@@ -138,7 +138,7 @@ pipeline {
                     """
 
                     emailext(
-                        to: 'mohamedamine.larbi@esprit.tn',
+                        to: 'achref.chaabani@esprit.tn',
                         subject: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Finished",
                         body: emailBody,
                         mimeType: 'text/html'
@@ -151,7 +151,7 @@ pipeline {
     post {
         success {
             emailext(
-                to: 'mohamedamine.larbi@esprit.tn',
+                to: 'achref.chaabani@esprit.tn',
                 subject: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Succeeded",
                 body: """
                     <html>
@@ -176,7 +176,7 @@ pipeline {
 
         failure {
             emailext(
-                to: 'mohamedamine.larbi@esprit.tn',
+                to: 'achref.chaabani@esprit.tn',
                 subject: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Failed",
                 body: """
                     <html>
