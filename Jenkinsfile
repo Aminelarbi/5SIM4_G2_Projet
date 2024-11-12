@@ -4,9 +4,9 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('SonarToken')
-        NEXUS_URL = 'http://192.168.50.5:8081/repository/maven-releases/tn/esprit/spring/gestion-station-ski/1.2/gestion-station-ski-1.2.jar'
         DOCKER_HUB_CREDENTIALS = credentials('DockerHubCredentials')
         IMAGE_TAG = 'v3' // Nouveau tag pour l'image Docker
+        DOCKER_IMAGE='anas_rebai_5sim4_g2_back_ski'
     }
 
     stages {
@@ -58,22 +58,23 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            agent { label 'agent01' }
-            steps {
-                script {
-                    echo 'Building Docker image with Nexus credentials...'
-                    withCredentials([usernamePassword(credentialsId: 'NEXUS', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                        sh """
-                            docker build \
-                                --no-cache \
-                                --build-arg NEXUS_USER=$NEXUS_USER \
-                                --build-arg NEXUS_PASS=$NEXUS_PASS \
-                                --build-arg NEXUS_URL=$NEXUS_URL \
-                                -t gestion-station-ski:${IMAGE_TAG} .
-                        """
+                    agent { label 'agent01' }
+                    steps {
+                        script {
+                            def nexusUrl = "http://192.168.50.5:8081"
+                            def groupId = "tn.esprit.spring"
+                            def artifactId = "gestion-station-ski"
+                            def version = "1.2"
+
+                            sh """
+                                docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
+                                --build-arg NEXUS_URL=${nexusUrl} \
+                                --build-arg GROUP_ID=${groupId} \
+                                --build-arg ARTIFACT_ID=${artifactId} \
+                                --build-arg VERSION=${version} .
+                            """
+                        }
                     }
-                }
-            }
         }
 
         stage('Push Image to DockerHub') {
@@ -84,10 +85,10 @@ pipeline {
                     sh 'docker login -u $DOCKER_HUB_CREDENTIALS_USR -p $DOCKER_HUB_CREDENTIALS_PSW'
 
                     echo 'Tagging Docker image...'
-                    sh "docker tag gestion-station-ski:${IMAGE_TAG} rab3oon/gestion-station-ski:${IMAGE_TAG}"
+                    sh "docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} rab3oon/${DOCKER_IMAGE}:${IMAGE_TAG}"
 
                     echo 'Pushing Docker image to Docker Hub...'
-                    sh "docker push rab3oon/gestion-station-ski:${IMAGE_TAG}"
+                    sh "docker push rab3oon/${DOCKER_IMAGE}:${IMAGE_TAG}"
                 }
             }
         }

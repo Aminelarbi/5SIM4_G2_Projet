@@ -1,19 +1,23 @@
-# Use OpenJDK 17 as the base image
+# Use an OpenJDK image as the base
 FROM openjdk:17-jdk-alpine
 
-# Expose port 9005
+# Define build arguments for Nexus configuration
+ARG NEXUS_URL
+ARG GROUP_ID
+ARG ARTIFACT_ID
+ARG VERSION
+
+# Construct the Nexus download URL based on these arguments
+RUN apk add --no-cache curl && \
+    curl -o app.jar "$NEXUS_URL/repository/maven-releases/$(echo $GROUP_ID | tr . /)/$ARTIFACT_ID/$VERSION/$ARTIFACT_ID-$VERSION.jar"
+
+# Expose the application port
 EXPOSE 9005
 
-# Set environment variables for Nexus credentials and URL
-ARG NEXUS_USER
-ARG NEXUS_PASS
-ARG NEXUS_URL
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
-# Update mirror and install curl, then download the JAR from Nexus
-RUN sed -i 's|dl-cdn.alpinelinux.org|mirror.sjtu.edu.cn|g' /etc/apk/repositories && \
-    apk update && \
-    apk add --no-cache curl && \
-    curl -u "$NEXUS_USER:$NEXUS_PASS" -o gestion-station-ski-1.2.jar "$NEXUS_URL"
-
-# Set the entry point to run the application
-ENTRYPOINT ["java", "-jar", "/gestion-station-ski-1.2.jar"]
+#FROM openjdk:17-jdk-alpine
+#WORKDIR /app
+#COPY target/*.jar app.jar
+#EXPOSE 9000
+#ENTRYPOINT ["java", "-jar", "app.jar"]
