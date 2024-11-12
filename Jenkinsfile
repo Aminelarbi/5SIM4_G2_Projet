@@ -4,9 +4,9 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('SonarToken')
-        NEXUS_URL = 'http://192.168.50.5:8081/repository/maven-releases/tn/esprit/spring/gestion-station-ski/1.0/gestion-station-ski-1.0.jar'
+        NEXUS_URL = 'http://192.168.50.5:8081/repository/maven-releases/tn/esprit/spring/gestion-station-ski/1.2/gestion-station-ski-1.2.jar'
         DOCKER_HUB_CREDENTIALS = credentials('DockerHubCredentials')
-        IMAGE_TAG = 'v2' // Nouveau tag pour l'image Docker
+        IMAGE_TAG = 'v3' // Nouveau tag pour l'image Docker
     }
 
     stages {
@@ -65,6 +65,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'NEXUS', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
                         sh """
                             docker build \
+                                --no-cache \
                                 --build-arg NEXUS_USER=$NEXUS_USER \
                                 --build-arg NEXUS_PASS=$NEXUS_PASS \
                                 --build-arg NEXUS_URL=$NEXUS_URL \
