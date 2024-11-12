@@ -5,11 +5,12 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('SonarToken')
         DOCKER_HUB_CREDENTIALS = credentials('DockerHubCredentials')
-        IMAGE_TAG = 'v3'
+        IMAGE_TAG = 'v4'
         DOCKER_IMAGE='anas_rebai_5sim4_g2_back_ski'
     }
 
     stages {
+
         stage('Checkout GIT') {
             agent { label 'master' }
             steps {
@@ -64,7 +65,7 @@ pipeline {
                     def nexusUrl = "http://192.168.50.5:8081"
                     def groupId = "tn.esprit.spring"
                     def artifactId = "gestion-station-ski"
-                    def version = "1.2"
+                    def version = "1.4"
 
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
@@ -76,6 +77,15 @@ pipeline {
                 }
             }
         }
+
+        /*stage('Trivy Security Scan') {
+            agent { label 'agent01' }
+            steps {
+                script {
+                    sh "trivy image  rab3oon/${DOCKER_IMAGE}:${IMAGE_TAG} >scanImage.txt"
+                }
+            }
+        }*/
 
         stage('Push Image to DockerHub') {
             agent { label 'agent01' }
@@ -92,8 +102,6 @@ pipeline {
                 }
             }
         }
-
-
 
         stage('Deploy to AKS') {
             agent { label 'agent01' }
@@ -119,22 +127,22 @@ pipeline {
         }
     }
 
-   post {
-       success {
-           script {
-               slackSend(
-                   channel: '#jenkins',
-                   message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully"
-               )
-           }
-       }
-       failure {
-           script {
-               slackSend(
-                   channel: '#jenkins',
-                   message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
-               )
-           }
-       }
-   }
+    post {
+        success {
+            script {
+                slackSend(
+                    channel: '#jenkins',
+                    message: "Le build a réussi : ${env.JOB_NAME} #${env.BUILD_NUMBER} ! Image pushed: ${DOCKER_IMAGE}:${IMAGE_TAG} successfully"
+                )
+            }
+        }
+        failure {
+            script {
+                slackSend(
+                    channel: '#jenkins',
+                    message: "Le build a échoué : ${env.JOB_NAME} #${env.BUILD_NUMBER}."
+                )
+            }
+        }
+    }
 }
