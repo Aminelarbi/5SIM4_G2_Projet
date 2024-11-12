@@ -1,19 +1,22 @@
-# Use an OpenJDK image as the base
+# Utiliser une image OpenJDK comme base
 FROM openjdk:17-jdk-alpine
 
-# Define build arguments for Nexus configuration
+# Mise à jour des dépôts Alpine et installation de curl
+RUN apk update && apk add --no-cache curl
+
+# Définir les arguments pour Nexus
 ARG NEXUS_URL
 ARG GROUP_ID
 ARG ARTIFACT_ID
 ARG VERSION
 
-# Construct the Nexus download URL based on these arguments
-RUN apk add --no-cache curl && \
-    curl -o app.jar "$NEXUS_URL/repository/maven-releases/$(echo $GROUP_ID | tr . /)/$ARTIFACT_ID/$VERSION/$ARTIFACT_ID-$VERSION.jar"
+# Construire l'URL et télécharger l'artefact depuis Nexus
+RUN curl -f -o app.jar "$NEXUS_URL/repository/maven-releases/$(echo $GROUP_ID | tr . /)/$ARTIFACT_ID/$VERSION/$ARTIFACT_ID-$VERSION.jar"
 
-# Expose the application port
+# Exposer le port de l'application
 EXPOSE 9005
 
+# Lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
 #FROM openjdk:17-jdk-alpine
