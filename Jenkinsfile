@@ -114,7 +114,7 @@ pipeline {
                 script {
                     def sonarQubeUrl = 'http://192.168.50.4:9000/dashboard?id=tn.esprit.spring%3Agestion-station-ski'
                     def prometheusUrl = 'http://192.168.50.4:8082/api/actuator/prometheus'
-                    def grafanaDashboardUrl = 'http://localhost:3000/public-dashboards/3592e7ecf4464558b07f6d34e9b8d4ba'
+                    def grafanaDashboardUrl = 'http://192.168.50.4:3000/d/de3h2nhuw3zswa/jvm-micrometer?from=now-24h&to=now&timezone=browser&var-application=&var-instance=192.168.50.4:8082&var-jvm_memory_pool_heap=$__all&var-jvm_memory_pool_nonheap=$__all&var-jvm_buffer_pool=$__all&refresh=5s'
 
                     def emailBody = """
                         <html>
