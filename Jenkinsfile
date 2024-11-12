@@ -108,11 +108,95 @@ pipeline {
                     }
          }
 
+
+        stage("Mail Notification") {
+            steps {
+                script {
+                    def sonarQubeUrl = 'http://192.168.33.10:9000/dashboard?id=tn.esprit.spring%3Agestion-station-ski'
+                    def emailBody = """
+                        <html>
+                        <body style="background-color: #f4f4f9; font-family: Arial, sans-serif; padding: 20px;">
+                            <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                                <h2 style="color: #333;">Job Notification: ${env.JOB_NAME}</h2>
+                                <p style="color: #555; font-size: 16px;">Hello,</p>
+                                <p style="color: #555; font-size: 16px;">
+                                    The Jenkins job <strong>${env.JOB_NAME}</strong> with build number <strong>${env.BUILD_NUMBER}</strong> has completed with status: <strong>${currentBuild.currentResult}</strong>.
+                                </p>
+
+                                <div style="text-align: center; margin-top: 20px;">
+                                    <a href="${env.BUILD_URL}" style="text-decoration: none; color: #fff; background-color: #28a745; padding: 10px 20px; border-radius: 4px; display: inline-block; font-weight: bold;">View Build Details</a>
+                                </div>
+
+                                <div style="text-align: center; margin-top: 20px;">
+                                    <a href="${sonarQubeUrl}" style="text-decoration: none; color: #fff; background-color: #007bff; padding: 10px 20px; border-radius: 4px; display: inline-block; font-weight: bold;">View SonarQube Report</a>
+                                </div>
+
+                                <p style="color: #555; font-size: 14px; margin-top: 30px;">Thank you,<br>Jenkins CI/CD</p>
+                            </div>
+                        </body>
+                        </html>
+                    """
+
+                    emailext(
+                        to: 'mohamedamine.larbi@esprit.tn',
+                        subject: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Finished",
+                        body: emailBody,
+                        mimeType: 'text/html'
+                    )
+                }
+            }
+        }
     }
 
     post {
-        always {
-            echo 'Pipeline execution completed!'
+        success {
+            emailext(
+                to: 'mohamedamine.larbi@esprit.tn',
+                subject: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Succeeded",
+                body: """
+                    <html>
+                    <body style="background-color: #e0f7e7; font-family: Arial, sans-serif; padding: 20px;">
+                        <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                            <h2 style="color: #28a745;">Success: ${env.JOB_NAME}</h2>
+                            <p style="color: #555; font-size: 16px;">Hello,</p>
+                            <p style="color: #555; font-size: 16px;">
+                                The Jenkins job <strong>${env.JOB_NAME}</strong> has successfully completed.
+                            </p>
+
+                            <div style="text-align: center; margin-top: 20px;">
+                                <a href="${env.BUILD_URL}" style="text-decoration: none; color: #fff; background-color: #28a745; padding: 10px 20px; border-radius: 4px; display: inline-block; font-weight: bold;">View Build Details</a>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                """,
+                mimeType: 'text/html'
+            )
+        }
+
+        failure {
+            emailext(
+                to: 'mohamedamine.larbi@esprit.tn',
+                subject: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Failed",
+                body: """
+                    <html>
+                    <body style="background-color: #f8d7da; font-family: Arial, sans-serif; padding: 20px;">
+                        <div style="max-width: 600px; margin: auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                            <h2 style="color: #dc3545;">Failure: ${env.JOB_NAME}</h2>
+                            <p style="color: #555; font-size: 16px;">Hello,</p>
+                            <p style="color: #555; font-size: 16px;">
+                                Unfortunately, the Jenkins job <strong>${env.JOB_NAME}</strong> has failed. Please check the logs.
+                            </p>
+
+                            <div style="text-align: center; margin-top: 20px;">
+                                <a href="${env.BUILD_URL}" style="text-decoration: none; color: #fff; background-color: #dc3545; padding: 10px 20px; border-radius: 4px; display: inline-block; font-weight: bold;">View Build Details</a>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                """,
+                mimeType: 'text/html'
+            )
         }
     }
 }
