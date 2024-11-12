@@ -91,15 +91,7 @@ pipeline {
             }
         }
 
-        stage('Security Scan with Trivy') {
-            agent { label 'agent01' }
-            steps {
-                script {
-                    // Trivy scan avec le nouveau tag
-                    sh "trivy image rab3oon/gestion-station-ski:${IMAGE_TAG} > trivy_report.txt"
-                }
-            }
-        }
+
 
         stage('Deploy to AKS') {
             agent { label 'agent01' }
