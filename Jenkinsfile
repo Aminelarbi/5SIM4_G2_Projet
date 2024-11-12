@@ -112,7 +112,10 @@ pipeline {
         stage("Mail Notification") {
             steps {
                 script {
-                    def sonarQubeUrl = 'http://192.168.33.10:9000/dashboard?id=tn.esprit.spring%3Agestion-station-ski'
+                    def sonarQubeUrl = 'http://192.168.50.4:9000/dashboard?id=tn.esprit.spring%3Agestion-station-ski'
+                    def prometheusUrl = 'http://192.168.50.4:8082/api/actuator/prometheus'
+                    def grafanaDashboardUrl = 'http://localhost:3000/public-dashboards/3592e7ecf4464558b07f6d34e9b8d4ba'
+
                     def emailBody = """
                         <html>
                         <body style="background-color: #f4f4f9; font-family: Arial, sans-serif; padding: 20px;">
@@ -131,15 +134,25 @@ pipeline {
                                     <a href="${sonarQubeUrl}" style="text-decoration: none; color: #fff; background-color: #007bff; padding: 10px 20px; border-radius: 4px; display: inline-block; font-weight: bold;">View SonarQube Report</a>
                                 </div>
 
-                                <p style="color: #555; font-size: 14px; margin-top: 30px;">Thank you,<br>Jenkins CI/CD</p>
+                                <div style="text-align: center; margin-top: 20px;">
+                                    <a href="${prometheusUrl}" style="text-decoration: none; color: #fff; background-color: #ff5722; padding: 10px 20px; border-radius: 4px; display: inline-block; font-weight: bold;">View Prometheus Metrics</a>
+                                </div>
+
+                                <div style="text-align: center; margin-top: 20px;">
+                                    <a href="${grafanaDashboardUrl}" style="text-decoration: none; color: #fff; background-color: #673ab7; padding: 10px 20px; border-radius: 4px; display: inline-block; font-weight: bold;">View Grafana Dashboard</a>
+                                </div>
+
+                                <p style="color: #555; font-size: 14px; margin-top: 20px;">Thank you for your attention!</p>
+                                <p style="color: #555; font-size: 14px;">Best regards,<br>Your Jenkins CI/CD</p>
                             </div>
                         </body>
                         </html>
                     """
 
+                    // Send the email notification
                     emailext(
                         to: 'achref.chaabani@esprit.tn',
-                        subject: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Finished",
+                        subject: "Job Notification: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: emailBody,
                         mimeType: 'text/html'
                     )
