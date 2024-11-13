@@ -10,6 +10,15 @@ pipeline {
             }
         }
 
+         stage('COMPILING') {
+                    steps {
+                        script {
+                            // Clean and install dependencies
+                            sh 'mvn clean install'
+                        }
+                    }
+                }
+
     }
 
 }
