@@ -65,14 +65,14 @@ pipeline {
                 sh "docker build -t mohamedaminelarbi/mohamedaminelarbi_stationski ."
             }
         }
-       /* stage("Pushing to DockerHub") {
+        stage("Pushing to DockerHub") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                     sh "docker push mohamedaminelarbi/mohamedaminelarbi_stationski"
                 }
             }
-        }*/
+        }
         stage("Stopping Containers") {
             steps {
                 sh "docker-compose down"
