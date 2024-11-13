@@ -24,7 +24,7 @@ spec:
             - containerPort: 3306
               name: mysql-port
         - name: backend
-          image: rab3oon/anas_rebai_5sim4_g2_back_ski:v3
+          image: rab3oon/anas_rebai_5sim4_g2_gestion_back_ski:v6
           env:
             - name: DATABASE_URL
               value: jdbc:mysql://localhost:3306/stationSki_db
