@@ -6,7 +6,7 @@ pipeline {
                 script {
                     try {
                         echo "======== Cloning with Git ========"
-                        git url: "git@github.com:Anas-REBAI/5SIM4_G2_Projet.git",
+                        git url: "git@github.com:Aminelarbi/5SIM4_G2_Projet.git",
                             branch: "MohamedAmineLarbi-5Sim4-G2",
                             credentialsId: "github"
                         currentBuild.description += "Cloning: ✅\n"
