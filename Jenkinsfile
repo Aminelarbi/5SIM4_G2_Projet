@@ -5,8 +5,8 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube'
         SONAR_TOKEN = credentials('SonarToken')
         DOCKER_HUB_CREDENTIALS = credentials('DockerHubCredentials')
-        IMAGE_TAG = 'v4'
-        DOCKER_IMAGE='anas_rebai_5sim4_g2_back_ski'
+        IMAGE_TAG = 'v5'
+        DOCKER_IMAGE='anas_rebai_5sim4_g2_gestion_ski'
     }
 
     stages {
@@ -65,7 +65,7 @@ pipeline {
                     def nexusUrl = "http://192.168.50.5:8081"
                     def groupId = "tn.esprit.spring"
                     def artifactId = "gestion-station-ski"
-                    def version = "1.4"
+                    def version = "1.5"
 
                     sh """
                         docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} \
