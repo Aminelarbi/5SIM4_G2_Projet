@@ -4,7 +4,7 @@ pipeline {
         stage("Cloning") {
             steps {
                 echo "======== Cloning with Git ========"
-                git url: "https://github.com/Anas-REBAI/5SIM4_G2_Projet.git",
+                git url: "http://github.com/Anas-REBAI/5SIM4_G2_Projet.git",
                     branch: "MohamedAmineLarbi-5Sim4-G2",
                     credentialsId: "github"
             }
