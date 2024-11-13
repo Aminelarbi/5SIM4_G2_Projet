@@ -7,7 +7,7 @@ WORKDIR /app
 COPY target/gestion-station-ski-1.0.0.jar /app/app.jar
 
 # Expose the port that your Spring Boot app will run on (8089)
-EXPOSE 8089
+EXPOSE 8082
 
 # Run the jar file when the container starts
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8089:8089"
+      - "8082:8082"
     depends_on:
       - mysqldb
     environment:
@@ -16,7 +16,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SERVLET_CONTEXT_PATH: /api
-      SERVER_PORT: 8089
+      SERVER_PORT: 8082
       SPRING_MVC_FORMAT_DATE: yyyy-MM-dd
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
 
