@@ -1,13 +1,5 @@
 pipeline {
 
-    agent any
-
-    environment {
-        SONARQUBE_ENV = 'SonarQube'
-        SONAR_TOKEN = credentials('SonartDevops')
-        DOCKER_CREDENTIALS_ID = 'DOCKER'
-    }
-
     stages {
 
         stage('GIT') {
@@ -18,27 +10,6 @@ pipeline {
             }
         }
 
-        stage('COMPILING') {
-            steps {
-                script {
-                    // Clean and install dependencies
-                    sh 'mvn clean install'
-                }
-            }
-        }
-
-        stage('SONARQUBE') {
-                    steps {
-                        script {
-                            withSonarQubeEnv("${SONARQUBE_ENV}") {
-                                sh """
-                                    mvn sonar:sonar \
-                                    -Dsonar.login=${SONAR_TOKEN} \
-                                    -Dsonar.coverage.jacoco.xmlReportPaths=/target/site/jacoco/jacoco.xml
-                                """
-                            }
-                        }
-                    }
-        }
     }
+
 }
