@@ -78,14 +78,14 @@ pipeline {
             }
         }
 
-        /*stage('Trivy Security Scan') {
+        stage('Trivy Security Scan') {
             agent { label 'agent01' }
             steps {
                 script {
                     sh "trivy image  rab3oon/${DOCKER_IMAGE}:${IMAGE_TAG} >scanImage.txt"
                 }
             }
-        }*/
+        }
 
         stage('Push Image to DockerHub') {
             agent { label 'agent01' }
