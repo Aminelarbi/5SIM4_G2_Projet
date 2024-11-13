@@ -1,6 +1,6 @@
 pipeline {
 
- agent any
+    agent any
 
     environment {
         SONARQUBE_ENV = 'SonarQube'
@@ -8,7 +8,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'DOCKER'
     }
 
- stages {
+    stages {
 
         stage('GIT') {
             steps {
@@ -39,5 +39,6 @@ pipeline {
                             }
                         }
                     }
-                }
+        }
+    }
 }
