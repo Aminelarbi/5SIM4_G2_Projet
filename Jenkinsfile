@@ -119,7 +119,7 @@ pipeline {
             }
         }
 
-      /* stage("Pushing to DockerHub") {
+      stage("Pushing to DockerHub") {
            steps {
                script {
                    try {
@@ -135,7 +135,7 @@ pipeline {
                    }
                }
            }
-       }*/
+       }
 
         stage("Stopping Containers") {
             steps {
